@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Engine, Render, Runner, Bodies, Composite } from 'matter-js';
+import Matter, { Engine, Render, Runner, Bodies, Composite } from 'matter-js';
 
 const worldWidth = 800;
 const startPins = 5;
@@ -8,6 +8,8 @@ const pinSize = 3;
 const pinGap = 30;
 const ballSize = 5;
 const ballElasticity = 0.75;
+const boardColor = '#282c34'; // Board color
+const pegColor = '#ff6347';   // Peg color
 
 const PlinkoBoard: React.FC = () => {
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -26,7 +28,8 @@ const PlinkoBoard: React.FC = () => {
       options: {
         width: worldWidth,
         height: 600,
-        wireframes: false,
+        wireframes: false, // Disable wireframes
+        background: boardColor, // Set the background color of the board
       },
     });
     const runner = Runner.create();
@@ -57,6 +60,13 @@ const PlinkoBoard: React.FC = () => {
       restitution: ballElasticity,
     });
     Composite.add(engine.world, [ball]);
+
+    // Custom rendering for pegs
+    render.engine.world.bodies.forEach(body => {
+      if (body.label === 'Circle Body') {
+        body.render.fillStyle = pegColor; // Apply peg color
+      }
+    });
 
     // Run the renderer
     Render.run(render);
