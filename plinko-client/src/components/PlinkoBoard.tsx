@@ -45,7 +45,13 @@ export default function PlinkoBoard() {
                 PLINKO
             </h1>
             <div className='relative w-full max-w-md h-96 bg-gray-800 border-4 border-gray-700 rounded-lg overflow-hidden'>
-                
+                {pegs.map((peg, index) => (
+                    <div
+                        key={index}
+                        className='absolute w-2 h-2 bg-white rounded-full'
+                        style={{ top: peg.top, left: peg.left}}
+                    ></div>
+                ))}
             </div>
         </div>
     )
