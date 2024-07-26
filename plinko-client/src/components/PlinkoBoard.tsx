@@ -19,6 +19,18 @@ export default function PlinkoBoard() {
         setBalls([...balls, newBall])
     }
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setBalls((prevBalls) => 
+                prevBalls.map((ball) =>
+                    ball.position < 100
+                    ? {...ball, position: ball.position + 1}
+                    : ball
+                )
+            )
+        }, 100)
+        return () => clearInterval(interval)
+    }, [])
 
     return (
         <div className='text-red-400'>
