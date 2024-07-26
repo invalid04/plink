@@ -32,6 +32,13 @@ export default function PlinkoBoard() {
         return () => clearInterval(interval)
     }, [])
 
+    const pegs = []
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 5; j++) {
+            pegs.push({ top: `${(i + 1) * 10}%`, left: `${(j + 1) * 20}%`})
+        }
+    }
+
     return (
         <div className='text-red-400'>
             hi
