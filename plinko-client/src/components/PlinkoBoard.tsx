@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import Matter, { Engine, Render, Runner, Bodies, Composite } from 'matter-js';
+import { Engine, Render, Runner, Bodies, Composite } from 'matter-js';
 
 const worldWidth = 800;
 const startPins = 5;
