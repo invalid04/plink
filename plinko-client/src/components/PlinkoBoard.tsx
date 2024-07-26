@@ -8,6 +8,11 @@ interface Ball {
     velocityY: number;
 }
 
+interface Peg {
+    top: string;
+    left: string;
+}
+
 export default function PlinkoBoard() {
 
     const [balls, setBalls] = useState<Ball[]>([])
@@ -56,6 +61,10 @@ export default function PlinkoBoard() {
                     ball.velocityX = -ball.velocityX;
                   }
                 });
+
+                if (newLeft < 0 || newLeft > 95) {
+                    ball.velocityX = -ball.velocityX
+                }
       
                 // Update ball position
                 return {
