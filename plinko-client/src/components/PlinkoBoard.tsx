@@ -44,6 +44,9 @@ export default function PlinkoBoard() {
             <h1 className='text-4xl font-bold text-white mb-4'>
                 PLINKO
             </h1>
+            <div className='relative w-full max-w-md h-96 bg-gray-800 border-4 border-gray-700 rounded-lg overflow-hidden'>
+                
+            </div>
         </div>
     )
 }
