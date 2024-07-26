@@ -16,6 +16,7 @@ interface Peg {
 export default function PlinkoBoard() {
 
     const [balls, setBalls] = useState<Ball[]>([])
+    const [pegs, setPegs] = useState<Peg[]>([])
 
     const dropBall = () => {
         const newBall: Ball = {
@@ -28,14 +29,15 @@ export default function PlinkoBoard() {
         setBalls([...balls, newBall])
     }
 
-    const pegs = []
-    for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 5; j++) {
-            pegs.push({ top: `${(i + 1) * 10}%`, left: `${(j + 1) * 20}%`})
-        }
-    }
-
     useEffect(() => {
+        const initialPegs: Peg[] = []
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 5; j++) {
+                initialPegs.push({ top: `${(i + 1) * 10}%`, left: `${(j + 1) * 20}%`})
+            }
+        }
+        setPegs(initialPegs)
+
         const interval = setInterval(() => {
           setBalls((prevBalls) =>
             prevBalls.map((ball) => {
