@@ -58,7 +58,7 @@ const PlinkoBoard: React.FC = () => {
     // Create initial ball
     const ball = Bodies.circle(worldWidth / 2, 0, ballSize, {
       restitution: ballElasticity,
-      render: { fillStyle: '#00f' }, // Ball color
+      render: { fillStyle: '#DC143C' }, // Ball color
     });
     Composite.add(engine.world, [ball]);
 
@@ -75,7 +75,7 @@ const PlinkoBoard: React.FC = () => {
 
       const newBall = Bodies.circle(x, y, ballSize, {
         restitution: ballElasticity,
-        render: { fillStyle: '#00f' },
+        render: { fillStyle: '#00f' }, // Ball color
       });
       Composite.add(engine.world, [newBall]);
     };
