@@ -9,8 +9,8 @@ interface Ball {
 }
 
 interface Peg {
-    top: string;
-    left: string;
+    top: number;
+    left: number;
 }
 
 export default function PlinkoBoard() {
@@ -30,13 +30,16 @@ export default function PlinkoBoard() {
     }
 
     useEffect(() => {
-        const initialPegs: Peg[] = []
+        const initialPegs: Peg[] = [];
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 5; j++) {
-                initialPegs.push({ top: `${(i + 1) * 10}%`, left: `${(j + 1) * 20}%`})
+                initialPegs.push({
+                    top: (i + 1) * 10,
+                    left: (j + 1) * 20,
+                });
             }
         }
-        setPegs(initialPegs)
+        setPegs(initialPegs);
 
         const interval = setInterval(() => {
           setBalls((prevBalls) =>
@@ -48,16 +51,14 @@ export default function PlinkoBoard() {
       
                 // Check for collisions with pegs
                 pegs.forEach((peg) => {
-                  const pegTop = parseFloat(peg.top);
-                  const pegLeft = parseFloat(peg.left);
+                  const pegTop = peg.top;
+                  const pegLeft = peg.left;
       
                   // Simple distance-based collision detection
-                  const distance = Math.sqrt(
-                    Math.pow(newPosition - pegTop, 2) +
-                    Math.pow(newLeft - pegLeft, 2)
-                  );
+                  const distanceX = newLeft - pegLeft 
+                  const distanceY = newPosition - pegTop 
       
-                  if (distance < 5) { // Collision detected (radius of peg and ball)
+                  if (Math.abs(distanceX) < 5 && Math.abs(distanceY) < 5) { // Collision detected (radius of peg and ball)
                     // Reflect the ball's velocity
                     ball.velocityY = -ball.velocityY;
                     ball.velocityX = -ball.velocityX;
@@ -81,7 +82,7 @@ export default function PlinkoBoard() {
         }, 100);
       
         return () => clearInterval(interval);
-      }, []);
+      }, [pegs]);
 
     return (
         <div className='flex flex-col items-center justify-center min-h-screen bg-green-700'>
@@ -93,7 +94,7 @@ export default function PlinkoBoard() {
                     <div
                         key={index}
                         className='absolute w-2 h-2 bg-white rounded-full'
-                        style={{ top: peg.top, left: peg.left}}
+                        style={{ top: `${peg.top}%`, left: `${peg.left}%` }}
                     ></div>
                 ))}
                 {balls.map((ball) => (
