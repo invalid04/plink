@@ -52,7 +52,20 @@ export default function PlinkoBoard() {
                         style={{ top: peg.top, left: peg.left}}
                     ></div>
                 ))}
+                {balls.map((ball) => (
+                    <div
+                        key={ball.id}
+                        className='absolute w-4 h-4 bg-red-500 rounded-full'
+                        style={{ top: `${ball.position}%`, left: `${ball.left}%` }}
+                    ></div>
+                ))}
             </div>
+            <button
+                className='mt-4 px-6 py-2 bg-blue-500 text-white rounded-full'
+                onClick={dropBall}
+            >
+                Drop Ball
+            </button>
         </div>
     )
 }
