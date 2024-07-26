@@ -9,7 +9,7 @@ const pinGap = 30;
 const ballSize = 5; // Increased ball size for visibility
 const ballElasticity = 0.75;
 const boardColor = '#282c34'; // Board color
-const pegColor = '#ff6347';   // Peg color
+const pegColor = '#C0C2C9';   // Peg color
 
 const PlinkoBoard: React.FC = () => {
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -103,7 +103,7 @@ const PlinkoBoard: React.FC = () => {
       <div
         ref={canvasRef}
         className="relative bg-gray-800 border-4 border-gray-700 rounded-lg"
-        style={{ width: worldWidth, height: '600px' }}
+        style={{ width: '810px', height: '610px' }}
       />
     </div>
   );
