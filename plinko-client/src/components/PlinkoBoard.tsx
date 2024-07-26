@@ -4,9 +4,9 @@ import Matter, { Engine, Render, Runner, Bodies, Composite } from 'matter-js';
 const worldWidth = 800;
 const startPins = 5;
 const pinLines = 25;
-const pinSize = 3;
+const pinSize = 5; // Adjusted pin size for appropriate visibility
 const pinGap = 30;
-const ballSize = 5;
+const ballSize = 5; // Increased ball size for visibility
 const ballElasticity = 0.75;
 const boardColor = '#282c34'; // Board color
 const pegColor = '#ff6347';   // Peg color
@@ -48,7 +48,7 @@ const PlinkoBoard: React.FC = () => {
           worldWidth / 2 - lineWidth / 2 + i * pinGap,
           100 + l * pinGap,
           pinSize,
-          { isStatic: true }
+          { isStatic: true, render: { fillStyle: pegColor } }
         );
         pins.push(pin);
       }
@@ -58,15 +58,9 @@ const PlinkoBoard: React.FC = () => {
     // Create initial ball
     const ball = Bodies.circle(worldWidth / 2, 0, ballSize, {
       restitution: ballElasticity,
+      render: { fillStyle: '#00f' }, // Ball color
     });
     Composite.add(engine.world, [ball]);
-
-    // Custom rendering for pegs
-    render.engine.world.bodies.forEach(body => {
-      if (body.label === 'Circle Body') {
-        body.render.fillStyle = pegColor; // Apply peg color
-      }
-    });
 
     // Run the renderer
     Render.run(render);
@@ -81,6 +75,7 @@ const PlinkoBoard: React.FC = () => {
 
       const newBall = Bodies.circle(x, y, ballSize, {
         restitution: ballElasticity,
+        render: { fillStyle: '#00f' },
       });
       Composite.add(engine.world, [newBall]);
     };
@@ -102,7 +97,16 @@ const PlinkoBoard: React.FC = () => {
     };
   }, []);
 
-  return <div ref={canvasRef} style={{ width: worldWidth, height: '600px' }} />;
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900">
+      <h1 className="text-4xl font-bold text-white mb-4">Plinko Game</h1>
+      <div
+        ref={canvasRef}
+        className="relative bg-gray-800 border-4 border-gray-700 rounded-lg"
+        style={{ width: worldWidth, height: '600px' }}
+      />
+    </div>
+  );
 };
 
 export default PlinkoBoard;
