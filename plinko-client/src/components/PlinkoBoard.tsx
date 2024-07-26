@@ -23,25 +23,54 @@ export default function PlinkoBoard() {
         setBalls([...balls, newBall])
     }
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setBalls((prevBalls) => 
-                prevBalls.map((ball) =>
-                    ball.position < 100
-                    ? {...ball, position: ball.position + 1}
-                    : ball
-                )
-            )
-        }, 100)
-        return () => clearInterval(interval)
-    }, [])
-
     const pegs = []
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 5; j++) {
             pegs.push({ top: `${(i + 1) * 10}%`, left: `${(j + 1) * 20}%`})
         }
     }
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+          setBalls((prevBalls) =>
+            prevBalls.map((ball) => {
+              if (ball.position < 100) {
+                // Update position based on velocity
+                let newPosition = ball.position + ball.velocityY;
+                let newLeft = ball.left + ball.velocityX;
+      
+                // Check for collisions with pegs
+                pegs.forEach((peg) => {
+                  const pegTop = parseFloat(peg.top);
+                  const pegLeft = parseFloat(peg.left);
+      
+                  // Simple distance-based collision detection
+                  const distance = Math.sqrt(
+                    Math.pow(newPosition - pegTop, 2) +
+                    Math.pow(newLeft - pegLeft, 2)
+                  );
+      
+                  if (distance < 5) { // Collision detected (radius of peg and ball)
+                    // Reflect the ball's velocity
+                    ball.velocityY = -ball.velocityY;
+                    ball.velocityX = -ball.velocityX;
+                  }
+                });
+      
+                // Update ball position
+                return {
+                  ...ball,
+                  position: newPosition,
+                  left: newLeft,
+                };
+              }
+              return ball;
+            })
+          );
+        }, 100);
+      
+        return () => clearInterval(interval);
+      }, []);
 
     return (
         <div className='flex flex-col items-center justify-center min-h-screen bg-green-700'>
