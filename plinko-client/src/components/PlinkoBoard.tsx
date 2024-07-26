@@ -10,6 +10,7 @@ const ballSize = 5; // Increased ball size for visibility
 const ballElasticity = 0.75;
 const boardColor = '#282c34'; // Board color
 const pegColor = '#C0C2C9';   // Peg color
+const ballColor = '#DC143C';     // Ball color
 
 const PlinkoBoard: React.FC = () => {
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -56,11 +57,13 @@ const PlinkoBoard: React.FC = () => {
     Composite.add(engine.world, pins);
 
     // Create initial ball
-    const ball = Bodies.circle(worldWidth / 2, 0, ballSize, {
+    const createBall = (x: number, y: number) => Bodies.circle(x, y, ballSize, {
       restitution: ballElasticity,
-      render: { fillStyle: '#DC143C' }, // Ball color
+      render: { fillStyle: ballColor }, // Ball color
     });
-    Composite.add(engine.world, [ball]);
+
+    const initialBall = createBall(worldWidth / 2, 0);
+    Composite.add(engine.world, [initialBall]);
 
     // Run the renderer
     Render.run(render);
@@ -73,10 +76,7 @@ const PlinkoBoard: React.FC = () => {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
-      const newBall = Bodies.circle(x, y, ballSize, {
-        restitution: ballElasticity,
-        render: { fillStyle: '#00f' }, // Ball color
-      });
+      const newBall = createBall(x, y);
       Composite.add(engine.world, [newBall]);
     };
     window.addEventListener('click', handleClick);
