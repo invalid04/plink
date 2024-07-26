@@ -4,6 +4,8 @@ interface Ball {
     id: number;
     position: number;
     left: number;
+    velocityX: number;
+    velocityY: number;
 }
 
 export default function PlinkoBoard() {
