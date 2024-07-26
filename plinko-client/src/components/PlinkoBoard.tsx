@@ -17,7 +17,8 @@ export default function PlinkoBoard() {
             id: balls.length,
             position: 0,
             left: Math.random() * 90 + 5,
-            velocityX: Math.random() * 2 - 1
+            velocityX: Math.random() * 2 - 1,
+            velocityY: 1
         }
         setBalls([...balls, newBall])
     }
