@@ -40,8 +40,10 @@ export default function PlinkoBoard() {
     }
 
     return (
-        <div className='text-red-400'>
-            hi
+        <div className='flex flex-col items-center justify-center min-h-screen bg-green-700'>
+            <h1 className='text-4xl font-bold text-white mb-4'>
+                PLINKO
+            </h1>
         </div>
     )
 }
