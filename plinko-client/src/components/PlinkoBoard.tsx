@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { Engine, Render, Runner, Bodies, Composite } from 'matter-js';
+import React, { useEffect, useRef } from 'react';
+import Matter, { Engine, Render, Runner, Bodies, Composite } from 'matter-js';
 
 const worldWidth = 800;
 const startPins = 5;
@@ -9,10 +9,11 @@ const pinGap = 30;
 const ballSize = 5;
 const ballElasticity = 0.75;
 
-const PlinkoBoard = () => {
+const PlinkoBoard: React.FC = () => {
   const canvasRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Engine | null>(null);
   const renderRef = useRef<Render | null>(null);
+  const runnerRef = useRef<Runner | null>(null);
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -28,9 +29,11 @@ const PlinkoBoard = () => {
         wireframes: false,
       },
     });
+    const runner = Runner.create();
 
     engineRef.current = engine;
     renderRef.current = render;
+    runnerRef.current = runner;
 
     // Create pins
     const pins = [];
@@ -57,7 +60,6 @@ const PlinkoBoard = () => {
 
     // Run the renderer
     Render.run(render);
-    const runner = Runner.create();
     Runner.run(runner, engine);
 
     // Click event listener to add balls
@@ -79,9 +81,13 @@ const PlinkoBoard = () => {
       if (renderRef.current) {
         Render.stop(renderRef.current);
       }
-      Runner.stop(engineRef.current);
-      Composite.clear(engineRef.current?.world, false);
-      Engine.clear(engineRef.current);
+      if (runnerRef.current) {
+        Runner.stop(runnerRef.current);
+      }
+      if (engineRef.current) {
+        Composite.clear(engineRef.current.world, false);
+        Engine.clear(engineRef.current);
+      }
       window.removeEventListener('click', handleClick);
     };
   }, []);
