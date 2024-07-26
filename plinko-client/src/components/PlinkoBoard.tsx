@@ -1,33 +1,33 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
+import { useSprings, animated } from '@react-spring/web';
 
 interface Ball {
     id: number;
-    position: number;
-    left: number;
-    velocityX: number;
-    velocityY: number;
+    position: number;  // Y-axis position in percentage
+    left: number;      // X-axis position in percentage
+    velocityX: number; // X-axis velocity
+    velocityY: number; // Y-axis velocity
 }
 
 interface Peg {
-    top: number;
-    left: number;
+    top: number;  // Top position in percentage
+    left: number; // Left position in percentage
 }
 
 export default function PlinkoBoard() {
-
-    const [balls, setBalls] = useState<Ball[]>([])
-    const [pegs, setPegs] = useState<Peg[]>([])
+    const [balls, setBalls] = useState<Ball[]>([]);
+    const [pegs, setPegs] = useState<Peg[]>([]);
 
     const dropBall = () => {
         const newBall: Ball = {
             id: balls.length,
             position: 0,
-            left: Math.random() * 90 + 5,
+            left: Math.random() * 80 + 10, // Start ball in a more visible range
             velocityX: Math.random() * 2 - 1,
-            velocityY: 1
-        }
-        setBalls([...balls, newBall])
-    }
+            velocityY: 1,
+        };
+        setBalls((prevBalls) => [...prevBalls, newBall]);
+    };
 
     useEffect(() => {
         const initialPegs: Peg[] = [];
@@ -40,49 +40,57 @@ export default function PlinkoBoard() {
             }
         }
         setPegs(initialPegs);
+    }, []); // Run only once on mount
 
+    useEffect(() => {
         const interval = setInterval(() => {
-          setBalls((prevBalls) =>
-            prevBalls.map((ball) => {
-              if (ball.position < 100) {
-                // Update position based on velocity
-                let newPosition = ball.position + ball.velocityY;
-                let newLeft = ball.left + ball.velocityX;
-      
-                // Check for collisions with pegs
-                pegs.forEach((peg) => {
-                  const pegTop = peg.top;
-                  const pegLeft = peg.left;
-      
-                  // Simple distance-based collision detection
-                  const distanceX = newLeft - pegLeft 
-                  const distanceY = newPosition - pegTop 
-      
-                  if (Math.abs(distanceX) < 5 && Math.abs(distanceY) < 5) { // Collision detected (radius of peg and ball)
-                    // Reflect the ball's velocity
-                    ball.velocityY = -ball.velocityY;
-                    ball.velocityX = -ball.velocityX;
-                  }
-                });
+            setBalls((prevBalls) => 
+                prevBalls.map((ball) => {
+                    if (ball.position < 100) {
+                        let newPosition = ball.position + ball.velocityY;
+                        let newLeft = ball.left + ball.velocityX;
 
-                if (newLeft < 0 || newLeft > 95) {
-                    ball.velocityX = -ball.velocityX
-                }
-      
-                // Update ball position
-                return {
-                  ...ball,
-                  position: newPosition,
-                  left: newLeft,
-                };
-              }
-              return ball;
-            })
-          );
-        }, 100);
-      
+                        // Check for collisions with pegs
+                        pegs.forEach((peg) => {
+                            const pegTop = peg.top;
+                            const pegLeft = peg.left;
+
+                            const distanceX = Math.abs(newLeft - pegLeft);
+                            const distanceY = Math.abs(newPosition - pegTop);
+
+                            if (distanceX < 5 && distanceY < 5) {
+                                ball.velocityY = -ball.velocityY;
+                                ball.velocityX = -ball.velocityX;
+                            }
+                        });
+
+                        if (newLeft < 0 || newLeft > 95) {
+                            ball.velocityX = -ball.velocityX;
+                        }
+
+                        return {
+                            ...ball,
+                            position: newPosition,
+                            left: newLeft,
+                        };
+                    }
+                    return ball;
+                })
+            );
+        }, 16); // ~60 FPS
+
         return () => clearInterval(interval);
-      }, [pegs]);
+    }, [pegs]); // Depend on pegs to avoid infinite loop
+
+    // Use useSprings to handle multiple balls
+    const springs = useSprings(
+        balls.length,
+        balls.map((ball) => ({
+            to: { top: `${ball.position}%`, left: `${ball.left}%` },
+            config: { mass: 1, tension: 170, friction: 26 },
+            reset: true,
+        }))
+    );
 
     return (
         <div className='flex flex-col items-center justify-center min-h-screen bg-green-700'>
@@ -97,12 +105,12 @@ export default function PlinkoBoard() {
                         style={{ top: `${peg.top}%`, left: `${peg.left}%` }}
                     ></div>
                 ))}
-                {balls.map((ball) => (
-                    <div
-                        key={ball.id}
+                {springs.map((springProps, index) => (
+                    <animated.div
+                        key={balls[index]?.id} // Ensure key exists
                         className='absolute w-4 h-4 bg-red-500 rounded-full'
-                        style={{ top: `${ball.position}%`, left: `${ball.left}%` }}
-                    ></div>
+                        style={springProps}
+                    ></animated.div>
                 ))}
             </div>
             <button
@@ -112,5 +120,5 @@ export default function PlinkoBoard() {
                 Drop Ball
             </button>
         </div>
-    )
+    );
 }
